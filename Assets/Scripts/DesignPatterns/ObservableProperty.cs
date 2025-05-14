@@ -1,49 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ObservableProperty<T>
+namespace DesignPattern
 {
-	[SerializeField] private T _value;
-	public T Value
+	public class ObservableProperty<T>
 	{
-		get { return _value; }
-		set
+		[SerializeField] private T _value;
+		public T Value
 		{
-			if (_value.Equals(value))
-				return;
+			get { return _value; }
+			set
+			{
+				if (_value.Equals(value))
+					return;
 
-			// set에서 값이 변경되면 알림 전송
-			_value = value;
-			Notify();
+				// set에서 값이 변경되면 알림 전송
+				_value = value;
+				Notify();
+			}
 		}
-	}
 
-	private UnityEvent<T> onValueChanged = new();
+		private UnityEvent<T> onValueChanged = new();
 
-	public ObservableProperty(T value = default)
-	{
-		_value = value;
-	}
+		public ObservableProperty(T value = default)
+		{
+			_value = value;
+		}
 
-	public void Subscribe(UnityAction<T> action)
-	{
-		onValueChanged.AddListener(action);
-	}
+		public void Subscribe(UnityAction<T> action)
+		{
+			onValueChanged.AddListener(action);
+		}
 
-	public void Unsubscribe(UnityAction<T> action)
-	{
-		onValueChanged.RemoveListener(action);
-	}
+		public void Unsubscribe(UnityAction<T> action)
+		{
+			onValueChanged.RemoveListener(action);
+		}
 
-	public void UnsubscribeAll()
-	{
-		onValueChanged.RemoveAllListeners();
-	}
+		public void UnsubscribeAll()
+		{
+			onValueChanged.RemoveAllListeners();
+		}
 
-	private void Notify()
-	{
-		onValueChanged?.Invoke(Value);
+		private void Notify()
+		{
+			onValueChanged?.Invoke(Value);
+		}
 	}
 }
