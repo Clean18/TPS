@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerStatus : MonoBehaviour
 {
 	[field: SerializeField][field: Range(0, 10)]
-	public float WalkeSpeed {  get; set; }
+	public float WalkSpeed {  get; set; }
 
 	[field: SerializeField][field: Range(0, 10)]
 	public float RunSpeed { get; set; }
