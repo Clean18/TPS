@@ -700,9 +700,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d0854847fb24c84a8c492ad483470ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <WalkSpeed>k__BackingField: 0
+  <WalkSpeed>k__BackingField: 2
   <RunSpeed>k__BackingField: 4
-  <RotateSpeed>k__BackingField: 0
+  <RotateSpeed>k__BackingField: 10
 --- !u!114 &1429114410
 MonoBehaviour:
   m_ObjectHideFlags: 0
