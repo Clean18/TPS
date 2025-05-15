@@ -94,7 +94,6 @@ public class PlayerMovement : MonoBehaviour
 	{
 		float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
 		float mouseY = -Input.GetAxis("Mouse Y") * mouseSensitivity; // Y는 상하반전
-
 		return new Vector2(mouseX, mouseY);
 	}
 }
