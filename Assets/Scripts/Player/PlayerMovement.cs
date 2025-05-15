@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,20 +45,20 @@ public class PlayerMovement : MonoBehaviour
 	{
 		Vector2 mouseDir = GetMouserDirection();
 
-		// XÃàÀº Á¦ÇÑÀ» °É ÇÊ¿ä°¡ ¾øÀ½
+		// Xì¶•ì€ ì œí•œì„ ê±¸ í•„ìš”ê°€ ì—†ìŒ
 		currentRotation.x += mouseDir.x;
 
-		// YÃàÀº Á¦ÇÑÀ» °É¾î¾ß ÇÔ
+		// Yì¶•ì€ ì œí•œì„ ê±¸ì–´ì•¼ í•¨
 		currentRotation.y = Mathf.Clamp(currentRotation.y + mouseDir.y, minPitch, maxPitch);
-
-		// Ä³¸¯ÅÍ ¿ÀºêÁ§Æ®ÀÇ °æ¿ì YÃà È¸Àü¸¸ ¹İ¿µµÇ¾ßÇÔ
+		//
+		// ìºë¦­í„° ì˜¤ë¸Œì íŠ¸ì˜ ê²½ìš° Yì¶• íšŒì „ë§Œ ë°˜ì˜ë˜ì•¼í•¨
 		transform.rotation = Quaternion.Euler(0, currentRotation.x, 0);
 
-		// ¿¡ÀÓÀÇ °æ¿ì »óÇÏ È¸Àü ¹İ¿µ
+		// ì—ì„ì˜ ê²½ìš° ìƒí•˜ íšŒì „ ë°˜ì˜
 		Vector3 currentEuler = aim.localEulerAngles;
 		aim.localEulerAngles = new Vector3(currentRotation.y, currentEuler.y, currentEuler.z);
 
-		// È¸Àü ¹æÇâ º¤ÅÍ ¹İÈ¯
+		// íšŒì „ ë°©í–¥ ë²¡í„° ë°˜í™˜
 		Vector3 rotateDirVector = transform.forward;
 		rotateDirVector.y = 0;
 		return rotateDirVector.normalized;
@@ -93,7 +93,7 @@ public class PlayerMovement : MonoBehaviour
 	private Vector2 GetMouserDirection()
 	{
 		float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-		float mouseY = -Input.GetAxis("Mouse Y") * mouseSensitivity; // Y´Â »óÇÏ¹İÀü
+		float mouseY = -Input.GetAxis("Mouse Y") * mouseSensitivity; // YëŠ” ìƒí•˜ë°˜ì „
 		return new Vector2(mouseX, mouseY);
 	}
 }

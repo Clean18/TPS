@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,7 +15,7 @@ namespace DesignPattern
 				if (_value.Equals(value))
 					return;
 
-				// set¿¡¼­ °ªÀÌ º¯°æµÇ¸é ¾Ë¸² Àü¼Û
+				// setì—ì„œ ê°’ì´ ë³€ê²½ë˜ë©´ ì•Œë¦¼ ì „ì†¡
 				_value = value;
 				Notify();
 			}

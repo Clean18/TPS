@@ -13,7 +13,10 @@ public class PlayerController : MonoBehaviour
 
 	[SerializeField] private CinemachineVirtualCamera aimCamera;
 
+	[SerializeField] private Gun gun;
+
 	[SerializeField] private KeyCode aimKey = KeyCode.Mouse1;
+	[SerializeField] private KeyCode shootKey = KeyCode.Mouse0;
 
 	void Awake()
 	{
@@ -51,15 +54,16 @@ public class PlayerController : MonoBehaviour
 
 		HandleMovement();
 		HandleAiming();
+		HandleShooting();
 	}
 
 	void HandleMovement()
 	{
-		// »∏¿¸ ºˆ«‡ »ƒ ¡¬øÏ »∏¿¸ø° ¥Î«— ∫§≈Õ π›»Ø
+		// ÌöåÏ†Ñ ÏàòÌñâ ÌõÑ Ï¢åÏö∞ ÌöåÏ†ÑÏóê ÎåÄÌïú Î≤°ÌÑ∞ Î∞òÌôò
 		Vector3 camRotateDir = movement.SetAimRotation();
 
 		float moveSpeed;
-		// IsAiming ªÛ≈¬ø° µ˚∂Û ¿Ãµøº”µµ ∫Ø∞Ê
+		// IsAiming ÏÉÅÌÉúÏóê Îî∞Îùº Ïù¥ÎèôÏÜçÎèÑ Î≥ÄÍ≤Ω
 		if (status.IsAiming.Value)
 			moveSpeed = status.WalkSpeed;
 		else
@@ -68,7 +72,7 @@ public class PlayerController : MonoBehaviour
 		Vector3 moveDir = movement.SetMove(moveSpeed);
 		status.IsMoving.Value = (moveDir != Vector3.zero);
 
-		// ∏ˆ√º¿« »∏¿¸
+		// Î™∏Ï≤¥Ïùò ÌöåÏ†Ñ
 		Vector3 avatarDir;
 		if (status.IsAiming.Value)
 			avatarDir = camRotateDir;
@@ -77,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
 		movement.SetAvatarRotation(avatarDir);
 
-		// æ÷¥œ∏ﬁ¿Ã≈Õ ∆ƒ∂ÛπÃ≈Õ √ﬂ∞°
+		// Ïï†ÎãàÎ©îÏù¥ÌÑ∞ ÌååÎùºÎØ∏ÌÑ∞ Ï∂îÍ∞Ä
 		if (status.IsAiming.Value)
 		{
 			Vector3 input = movement.GetInputDirection();
@@ -91,16 +95,30 @@ public class PlayerController : MonoBehaviour
 		status.IsAiming.Value = Input.GetKey(aimKey);
 	}
 
+	void HandleShooting()
+	{
+		if (status.IsAiming.Value && Input.GetKey(shootKey))
+		{
+			status.IsAttacking.Value = gun.Shoot();
+		}
+		else
+		{
+			status.IsAttacking.Value = false;
+		}
+	}
+
 	public void SubscribeEvents()
 	{
-		// SetActive «‘ºˆ∏¶ µÓ∑œ
-		// øÏ≈¨∏Ø¿∏∑Œ IsAiming¿« Value¿« ∞™¿Ã ∫Ø∞Êµ… Ω√
-		// Invoke∑Œ Value∏¶ ¿Œºˆ∑Œ SetActive «‘ºˆ Ω««‡
-		// > øÏ≈¨∏Øø° µ˚∂Û true / false∞° µ 
+		// SetActive Ìï®ÏàòÎ•º Îì±Î°ù
+		// Ïö∞ÌÅ¥Î¶≠ÏúºÎ°ú IsAimingÏùò ValueÏùò Í∞íÏù¥ Î≥ÄÍ≤ΩÎê† Ïãú
+		// InvokeÎ°ú ValueÎ•º Ïù∏ÏàòÎ°ú SetActive Ìï®Ïàò Ïã§Ìñâ
+		// > Ïö∞ÌÅ¥Î¶≠Ïóê Îî∞Îùº true / falseÍ∞Ä Îê®
 		status.IsAiming.Subscribe(aimCamera.gameObject.SetActive);
 		status.IsAiming.Subscribe(SetAimAnimation);
 
 		status.IsMoving.Subscribe(SetMoveAnimation);
+
+		status.IsAttacking.Subscribe(SetAttackAnimation);
 	}
 
 	public void UnsubscribeEvents()
@@ -109,6 +127,8 @@ public class PlayerController : MonoBehaviour
 		status.IsAiming.Unsubscribe(SetAimAnimation);
 
 		status.IsMoving.Unsubscribe(SetMoveAnimation);
+
+		status.IsAttacking.Unsubscribe(SetAttackAnimation);
 	}
 
 	void SetAimAnimation(bool value)
@@ -118,5 +138,9 @@ public class PlayerController : MonoBehaviour
 	void SetMoveAnimation(bool value)
 	{
 		anim.SetBool("IsMove", value);
+	}
+	void SetAttackAnimation(bool value)
+	{
+		anim.SetBool("IsAttack", value);
 	}
 }
