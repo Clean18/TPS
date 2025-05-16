@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private Animator aimAnim;
 	private Image aimImage;
 
+	[SerializeField] private HpGuageUI hpUI;
+
 	[SerializeField] private CinemachineVirtualCamera aimCamera;
 
 	[SerializeField] private Gun gun;
@@ -40,6 +42,20 @@ public class PlayerController : MonoBehaviour
 	void Update()
 	{
 		HandlePlayerControl();
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+		}
+
+		if (Input.GetKey(KeyCode.Alpha1))
+		{
+			TakeDamage(1);
+		}
+		if (Input.GetKey(KeyCode.Alpha2))
+		{
+			RecoveryHp(1);
+		}
 	}
 
 	void OnDisable()
@@ -55,6 +71,9 @@ public class PlayerController : MonoBehaviour
 		movement = GetComponent<PlayerMovement>();
 		anim = GetComponent<Animator>();
 		aimImage = aimAnim.GetComponent<Image>();
+
+		hpUI.SetImageFillAmount(1);
+		status.CurrentHp.Value = status.MaxHp;
 	}
 
 	void HandlePlayerControl()
@@ -105,6 +124,31 @@ public class PlayerController : MonoBehaviour
 		status.IsAiming.Value = Input.GetKey(aimKey);
 	}
 
+	public void TakeDamage(int damage)
+	{
+		// 체력이 0이하가 되면 플레이어 사망 처리
+		status.CurrentHp.Value -= damage;
+
+		if (status.CurrentHp.Value <= 0)
+		{
+			Dead();
+		}
+	}
+
+	public void RecoveryHp(int healAmount)
+	{
+		// MaxHp을 초과하지 않도록 회복
+		int hp = status.CurrentHp.Value + healAmount;
+
+		status.CurrentHp.Value = Mathf.Clamp(hp, 0, status.MaxHp);
+	}
+
+	public void Dead()
+	{
+		// TODO : 플레이어 사망 기능
+		Debug.Log("플레이어 사망 처리");
+	}
+
 	void HandleShooting()
 	{
 		if (status.IsAiming.Value && Input.GetKey(shootKey))
@@ -123,6 +167,8 @@ public class PlayerController : MonoBehaviour
 		// 우클릭으로 IsAiming의 Value의 값이 변경될 시
 		// Invoke로 Value를 인수로 SetActive 함수 실행
 		// > 우클릭에 따라 true / false가 됨
+		status.CurrentHp.Subscribe(SetHpUIGuage);
+
 		status.IsAiming.Subscribe(aimCamera.gameObject.SetActive);
 		status.IsAiming.Subscribe(SetAimAnimation);
 
@@ -133,6 +179,8 @@ public class PlayerController : MonoBehaviour
 
 	public void UnsubscribeEvents()
 	{
+		status.CurrentHp.Unsubscribe(SetHpUIGuage);
+
 		status.IsAiming.Unsubscribe(aimCamera.gameObject.SetActive);
 		status.IsAiming.Unsubscribe(SetAimAnimation);
 
@@ -158,5 +206,12 @@ public class PlayerController : MonoBehaviour
 	void SetAttackAnimation(bool value)
 	{
 		anim.SetBool("IsAttack", value);
+	}
+
+	void SetHpUIGuage(int currentHp)
+	{
+		// 현재 수치 / 최대 수치
+		float hpPer = (float)currentHp / status.MaxHp;
+		hpUI.SetImageFillAmount(hpPer);
 	}
 }
