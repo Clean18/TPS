@@ -30,14 +30,12 @@ public class SFXController : PooledObject
 		}
 	}
 
-	public void Play(AudioClip clip, bool loop = false, bool onAwake = false)
+	public void Play(AudioClip clip)
 	{
 		// 오디오 클립을 재생
 		audioSource.Stop();
 		audioSource.clip = clip;
 		audioSource.Play();
-		audioSource.loop = loop;
-		audioSource.playOnAwake = onAwake;
 
 		// 클립의 재생 시간을 변수에 할당
 		currentCount = clip.length;
