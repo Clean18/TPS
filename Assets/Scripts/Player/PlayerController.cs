@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,7 +10,9 @@ public class PlayerController : MonoBehaviour
 
 	[SerializeField] private PlayerStatus status;
 	[SerializeField] private PlayerMovement movement;
-	[SerializeField] private Animator anim;
+	private Animator anim;
+	[SerializeField] private Animator aimAnim;
+	private Image aimImage;
 
 	[SerializeField] private CinemachineVirtualCamera aimCamera;
 
@@ -21,6 +24,12 @@ public class PlayerController : MonoBehaviour
 	void Awake()
 	{
 		Init();
+	}
+
+	void Start()
+	{
+		Cursor.lockState = CursorLockMode.Locked; // 마우스를 화면 중앙에 고정
+		Cursor.visible = false;                   // 마우스 커서를 숨김
 	}
 
 	void OnEnable()
@@ -45,6 +54,7 @@ public class PlayerController : MonoBehaviour
 		status = GetComponent<PlayerStatus>();
 		movement = GetComponent<PlayerMovement>();
 		anim = GetComponent<Animator>();
+		aimImage = aimAnim.GetComponent<Image>();
 	}
 
 	void HandlePlayerControl()
@@ -133,7 +143,13 @@ public class PlayerController : MonoBehaviour
 
 	void SetAimAnimation(bool value)
 	{
+		// 에임 애니메이션의 디폴트는 1 > 0 이라 최초 런타임에서 에임이 사라지는 애니메이션이 재생되서 컴포넌트를 꺼두고 조건문 사용
+		if (!aimImage.enabled)
+		{
+			aimImage.enabled = true;
+		}
 		anim.SetBool("IsAim", value);
+		aimAnim.SetBool("IsAim", value);
 	}
 	void SetMoveAnimation(bool value)
 	{
