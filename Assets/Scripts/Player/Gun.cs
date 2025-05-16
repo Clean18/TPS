@@ -51,11 +51,11 @@ public class Gun : MonoBehaviour
 		currentCount = shootDelay;
 
 		// TODO : Ray 발사 > 반환받은 대상에게 대미지 입힘
-		GameObject target = RayShoot();
+		IDamagable target = RayShoot();
 		if (target == null)
 			return true;
 
-		Debug.Log($"총에 맞음 : {target.name}");
+		target.TakeDamage(shootDamage);
 
 		return true;
 	}
@@ -67,15 +67,15 @@ public class Gun : MonoBehaviour
 		currentCount -= Time.deltaTime;
 	}
 
-	GameObject RayShoot()
+	IDamagable RayShoot()
 	{
 		Ray ray = new Ray(cam.transform.position, cam.transform.forward);
 		RaycastHit hit;
 
 		if (Physics.Raycast(ray, out hit, attackRange, targetLayer))
 		{
-			return hit.transform.gameObject;
-			// TODO : 몬스터를 어떻게 구현하는가에 따라 다름
+			// 공격시마다 GetComponent를 받아오는데 이걸 최소화하는 방법?
+			return hit.transform.gameObject.GetComponent<IDamagable>();
 		}
 		return null;
 	}
