@@ -6,4 +6,5 @@ using UnityEngine;
 public interface IDamagable
 {
 	public void TakeDamage(int value);
+	public void TakeDamage(int value, Transform attacker);
 }

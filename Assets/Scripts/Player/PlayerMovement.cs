@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -17,6 +18,10 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField][Range(0, 5)] private float mouseSensitivity = 1;
 
 	private Vector2 currentRotation;
+
+	public Vector2 InputDriection { get; private set; }
+	public Vector2 MouseDirection { get; private set; }
+
 	void Awake()
 	{
 		Init();
@@ -43,7 +48,8 @@ public class PlayerMovement : MonoBehaviour
 
 	public Vector3 SetAimRotation()
 	{
-		Vector2 mouseDir = GetMouserDirection();
+		//Vector2 mouseDir = GetMouseDirection();
+		Vector2 mouseDir = MouseDirection;
 
 		// X축은 제한을 걸 필요가 없음
 		currentRotation.x += mouseDir.x;
@@ -76,24 +82,37 @@ public class PlayerMovement : MonoBehaviour
 
 	public Vector3 GetMoveDirection()
 	{
-		Vector3 input = GetInputDirection();
+		//Vector3 input = GetInputDirection();
 
-		Vector3 dir = (transform.right * input.x) + (transform.forward * input.z);
+		Vector3 dir = (transform.right * InputDriection.x) + (transform.forward * InputDriection.y);
 
 		return dir.normalized;
 	}
 
-	public Vector3 GetInputDirection()
+	public void OnMove(InputValue value)
 	{
-		float x = Input.GetAxisRaw("Horizontal");
-		float z = Input.GetAxisRaw("Vertical");
-		return new Vector3(x, 0, z);
+		InputDriection = value.Get<Vector2>();
 	}
 
-	private Vector2 GetMouserDirection()
+	public void OnRotate(InputValue value)
 	{
-		float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-		float mouseY = -Input.GetAxis("Mouse Y") * mouseSensitivity; // Y는 상하반전
-		return new Vector2(mouseX, mouseY);
+		Vector2 mouseDir = value.Get<Vector2>();
+		mouseDir.y *= -1;
+		MouseDirection = mouseDir * mouseSensitivity;
+		MouseDirection = MouseDirection.normalized;
 	}
+
+	//public Vector3 GetInputDirection()
+	//{
+	//	float x = Input.GetAxisRaw("Horizontal");
+	//	float z = Input.GetAxisRaw("Vertical");
+	//	return new Vector3(x, 0, z);
+	//}
+
+	//private Vector2 GetMouseDirection()
+	//{
+	//	float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+	//	float mouseY = -Input.GetAxis("Mouse Y") * mouseSensitivity; // Y는 상하반전
+	//	return new Vector2(mouseX, mouseY);
+	//}
 }

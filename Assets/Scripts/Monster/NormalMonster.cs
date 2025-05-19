@@ -7,8 +7,8 @@ using UnityEngine.UIElements;
 
 public class NormalMonster : Monster, IDamagable
 {
-	private bool isActivateControl = true;
-	private bool canTracking = true;
+	[SerializeField] private bool isActivateControl = true;
+	[SerializeField] private bool canTracking = true;
 	private ObservableProperty<bool> IsMoving = new();
 	private ObservableProperty<bool> IsAttacking = new();
 
@@ -18,6 +18,9 @@ public class NormalMonster : Monster, IDamagable
 	[Header("Config NavMesh")]
 	private NavMeshAgent navAgent;
 	[SerializeField] private Transform targetTransform;
+
+	// GetComponent를 사용하지 않고 IDamagable을 반환받기
+	public static Dictionary<Transform, IDamagable> MonsterDic = new Dictionary<Transform, IDamagable>();
 
 	void Awake()
 	{
@@ -29,10 +32,18 @@ public class NormalMonster : Monster, IDamagable
 		HandleControl();
 	}
 
+	void OnEnable()
+	{
+		// 활성화될 때 최대체력 유지
+		CurrentHp.Value = MaxHp;
+	}
+
 	void Init()
 	{
 		navAgent = GetComponent<NavMeshAgent>();
 		navAgent.isStopped = true;
+
+		MonsterDic.Add(transform, this);
 	}
 
 	void HandleControl()
@@ -45,8 +56,10 @@ public class NormalMonster : Monster, IDamagable
 
 	void HandleMove()
 	{
-		if (IsMoving.Value || targetTransform == null)
+		if (targetTransform == null)
+		{
 			return;
+		}
 
 		if (canTracking)
 		{
@@ -59,8 +72,25 @@ public class NormalMonster : Monster, IDamagable
 
 	public void TakeDamage(int value)
 	{
+		
+	}
+
+	public void TakeDamage(int value, Transform attacker)
+	{
 		// 대미지 판정
 		// 체력감소
+		CurrentHp.Value--;
+		Debug.Log($"체력감소 : {CurrentHp.Value}");
+
+		// 플레이어 추격
+		targetTransform = attacker;
+		Debug.Log($"추격 대상 변경 : {attacker.name}");
+
 		// 체력 0 이하면 Dead
+		if (CurrentHp.Value <= 0)
+		{
+			Debug.Log($"몬스터 사망 : ");
+			gameObject.SetActive(false);
+		}
 	}
 }

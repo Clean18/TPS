@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, IDamagable
 {
@@ -22,6 +23,8 @@ public class PlayerController : MonoBehaviour, IDamagable
 
 	[SerializeField] private KeyCode aimKey = KeyCode.Mouse1;
 	[SerializeField] private KeyCode shootKey = KeyCode.Mouse0;
+
+	private InputAction aimInputAction;
 
 	void Awake()
 	{
@@ -74,6 +77,8 @@ public class PlayerController : MonoBehaviour, IDamagable
 
 		hpUI.SetImageFillAmount(1);
 		status.CurrentHp.Value = status.MaxHp;
+
+		aimInputAction = GetComponent<PlayerInput>().actions["Aim"];
 	}
 
 	void HandlePlayerControl()
@@ -82,8 +87,8 @@ public class PlayerController : MonoBehaviour, IDamagable
 			return;
 
 		HandleMovement();
-		HandleAiming();
-		HandleShooting();
+		//HandleAiming();
+		//HandleShooting();
 	}
 
 	void HandleMovement()
@@ -110,18 +115,23 @@ public class PlayerController : MonoBehaviour, IDamagable
 
 		movement.SetAvatarRotation(avatarDir);
 
-		// 애니메이터 파라미터 추가
+		// 조준중일 때
 		if (status.IsAiming.Value)
 		{
-			Vector3 input = movement.GetInputDirection();
-			anim.SetFloat("X", input.x);
-			anim.SetFloat("Z", input.z);
+			//Vector3 input = movement.GetInputDirection();
+			//anim.SetFloat("X", input.x);
+			//anim.SetFloat("Z", input.z);
+
+			anim.SetFloat("X", movement.InputDriection.x);
+			anim.SetFloat("Z", movement.InputDriection.y);
 		}
 	}
 
-	void HandleAiming()
+	void HandleAiming(InputAction.CallbackContext ctx)
 	{
-		status.IsAiming.Value = Input.GetKey(aimKey);
+		//status.IsAiming.Value = Input.GetKey(aimKey);
+
+		status.IsAiming.Value = ctx.started;
 	}
 
 	public void TakeDamage(int damage)
@@ -133,6 +143,11 @@ public class PlayerController : MonoBehaviour, IDamagable
 		{
 			Dead();
 		}
+	}
+
+	public void TakeDamage(int damager, Transform attacker)
+	{
+
 	}
 
 	public void RecoveryHp(int healAmount)
@@ -149,9 +164,11 @@ public class PlayerController : MonoBehaviour, IDamagable
 		Debug.Log("플레이어 사망 처리");
 	}
 
-	void HandleShooting()
+	//void HandleShooting()
+	public void OnShoot()
 	{
-		if (status.IsAiming.Value && Input.GetKey(shootKey))
+		//if (status.IsAiming.Value && Input.GetKey(shootKey))
+		if (status.IsAiming.Value)
 		{
 			status.IsAttacking.Value = gun.Shoot();
 		}
@@ -175,6 +192,11 @@ public class PlayerController : MonoBehaviour, IDamagable
 		status.IsMoving.Subscribe(SetMoveAnimation);
 
 		status.IsAttacking.Subscribe(SetAttackAnimation);
+
+		// input
+		aimInputAction.Enable();
+		aimInputAction.started += HandleAiming;
+		aimInputAction.canceled += HandleAiming;
 	}
 
 	public void UnsubscribeEvents()
@@ -187,6 +209,11 @@ public class PlayerController : MonoBehaviour, IDamagable
 		status.IsMoving.Unsubscribe(SetMoveAnimation);
 
 		status.IsAttacking.Unsubscribe(SetAttackAnimation);
+
+		// input
+		aimInputAction.Disable();
+		aimInputAction.started -= HandleAiming;
+		aimInputAction.canceled -= HandleAiming;
 	}
 
 	void SetAimAnimation(bool value)
