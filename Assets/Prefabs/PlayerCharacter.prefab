@@ -286,6 +286,7 @@ GameObject:
   - component: {fileID: 3738109974347722960}
   - component: {fileID: 5911207496021028254}
   - component: {fileID: 2404043970269447179}
+  - component: {fileID: 1052010392414702908}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -337,7 +338,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!136 &8001417893332749606
 CapsuleCollider:
@@ -378,7 +379,9 @@ MonoBehaviour:
   aim: {fileID: 1108283024136680930}
   minPitch: -30
   maxPitch: 30
-  mouseSensitivity: 1
+  mouseSensitivity: 0.1
+  gamepadSensitivity: 5
+  playerInput: {fileID: 0}
 --- !u!114 &3738109974347722960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -436,6 +439,36 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1052010392414702908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3338278911648770299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 87846835c00e2da47a76b831988fb3bb, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: PC
+  m_DefaultActionMap: PlayerActions
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &4644037603573295737
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,6 +872,14 @@ PrefabInstance:
     - target: {fileID: 1778252615525040767, guid: 66dba8021c1092e4d8b1cfa6cb939229, type: 3}
       propertyPath: m_Name
       value: Gun
+      objectReference: {fileID: 0}
+    - target: {fileID: 5008056592799958618, guid: 66dba8021c1092e4d8b1cfa6cb939229, type: 3}
+      propertyPath: fireParticle
+      value: 
+      objectReference: {fileID: 3392198571918417863, guid: 4b4219fc1b8a33645a947364d0f7d97a, type: 3}
+    - target: {fileID: 5008056592799958618, guid: 66dba8021c1092e4d8b1cfa6cb939229, type: 3}
+      propertyPath: targetLayer.m_Bits
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 5725091477544191673, guid: 66dba8021c1092e4d8b1cfa6cb939229, type: 3}
       propertyPath: m_LocalPosition.x

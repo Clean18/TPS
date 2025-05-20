@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour, IDamagable
 	[SerializeField] private KeyCode shootKey = KeyCode.Mouse0;
 
 	private InputAction aimInputAction;
+	private InputAction shootInputAction;
 
 	void Awake()
 	{
@@ -79,6 +80,7 @@ public class PlayerController : MonoBehaviour, IDamagable
 		status.CurrentHp.Value = status.MaxHp;
 
 		aimInputAction = GetComponent<PlayerInput>().actions["Aim"];
+		shootInputAction = GetComponent<PlayerInput>().actions["Shoot"];
 	}
 
 	void HandlePlayerControl()
@@ -89,6 +91,7 @@ public class PlayerController : MonoBehaviour, IDamagable
 		HandleMovement();
 		//HandleAiming();
 		//HandleShooting();
+		OnShoot();
 	}
 
 	void HandleMovement()
@@ -167,8 +170,12 @@ public class PlayerController : MonoBehaviour, IDamagable
 	//void HandleShooting()
 	public void OnShoot()
 	{
+		//shootInputAction.WasPressedThisFrame();	> 이번 프레임에 눌렸는가	GetKeyDown
+		//shootInputAction.WasReleasedThisFrame();	> 이번 프레임에 떼어졌는가	GetKeyUp
+		//shootInputAction.IsPressed();				> 지금 눌려있는가			GetKey
+
 		//if (status.IsAiming.Value && Input.GetKey(shootKey))
-		if (status.IsAiming.Value)
+		if (status.IsAiming.Value && shootInputAction.IsPressed())
 		{
 			status.IsAttacking.Value = gun.Shoot();
 		}

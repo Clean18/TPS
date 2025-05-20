@@ -15,12 +15,15 @@ public class PlayerMovement : MonoBehaviour
 	[Header("Mouse Config")]
 	[SerializeField][Range(-90, 0)] private float minPitch;
 	[SerializeField][Range(0, 90)] private float maxPitch;
-	[SerializeField][Range(0, 5)] private float mouseSensitivity = 1;
+	[SerializeField][Range(0, 5)] private float mouseSensitivity = 1f;
+	[SerializeField][Range(0, 5)] private float gamepadSensitivity = 5f;
 
 	private Vector2 currentRotation;
 
 	public Vector2 InputDriection { get; private set; }
 	public Vector2 MouseDirection { get; private set; }
+
+	[SerializeField] PlayerInput playerInput;
 
 	void Awake()
 	{
@@ -31,6 +34,8 @@ public class PlayerMovement : MonoBehaviour
 	{
 		rigid = GetComponent<Rigidbody>();
 		playerStatus = GetComponent<PlayerStatus>();
+
+		playerInput = GetComponent<PlayerInput>();
 	}
 
 	public Vector3 SetMove(float moveSpeed)
@@ -98,8 +103,12 @@ public class PlayerMovement : MonoBehaviour
 	{
 		Vector2 mouseDir = value.Get<Vector2>();
 		mouseDir.y *= -1;
+
+		// 입력 장치
+		//InputDevice device = value.Get<InputDevice>();
+
 		MouseDirection = mouseDir * mouseSensitivity;
-		MouseDirection = MouseDirection.normalized;
+		//MouseDirection = MouseDirection.normalized;
 	}
 
 	//public Vector3 GetInputDirection()

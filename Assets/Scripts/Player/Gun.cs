@@ -10,6 +10,7 @@ public class Gun : MonoBehaviour
 	[SerializeField] private int shootDamage;
 	[SerializeField] private float shootDelay;
 	[SerializeField] private AudioClip shootSFX;
+	[SerializeField] private GameObject fireParticle;
 
 	private CinemachineImpulseSource impulse;
 
@@ -49,22 +50,28 @@ public class Gun : MonoBehaviour
 		PlayShootEffect();
 
 		currentCount = shootDelay;
+		RaycastHit hit;
+		IDamagable target = RayShoot(out hit);
 
-		// TODO : Ray 발사 > 반환받은 대상에게 대미지 입힘
-		IDamagable target = RayShoot();
+		if (!hit.Equals(default))
+		{
+			PlayFireEffect(hit.point, Quaternion.LookRotation(hit.normal));
+		}
+
 		if (target == null)
 		{
+			Debug.Log("target == null");
 			return true;
 		}
 		
 		target.TakeDamage(shootDamage, transform.parent.transform);
 
-		//// MonoBehaviour로 변환
-		//if (target is MonoBehaviour mb)
-		//{
-		//	GameObject gameObject = mb.gameObject;
-		//	Debug.Log(gameObject.name);
-		//}
+		// MonoBehaviour로 변환
+		if (target is MonoBehaviour mb)
+		{
+			//GameObject gameObject = mb.gameObject;
+			mb.targetTransform = transform.parent.transform;
+		}
 
 		return true;
 	}
@@ -76,20 +83,31 @@ public class Gun : MonoBehaviour
 		currentCount -= Time.deltaTime;
 	}
 
-	IDamagable RayShoot()
+	IDamagable RayShoot(out RaycastHit hitTarget)
 	{
 		Ray ray = new Ray(cam.transform.position, cam.transform.forward);
 		RaycastHit hit;
 		Debug.DrawRay(ray.origin, ray.direction * attackRange, Color.red, 1f);
 		if (Physics.Raycast(ray, out hit, attackRange, targetLayer))
 		{
-			// 공격시마다 GetComponent를 받아오는데 이걸 최소화하는 방법?
-			//return hit.transform.gameObject.GetComponent<IDamagable>();
-			return ReferenceRegistry.GetProvider(hit.collider.gameObject).GetAs<NormalMonster>();
+			hitTarget = hit;
+			if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Monster"))
+			{
+				return ReferenceRegistry.GetProvider(hit.collider.gameObject).GetAs<NormalMonster>();
+			}
 
 			//return NormalMonster.MonsterDic[hit.transform];
 		}
+		else
+		{
+			hitTarget = default;
+		}
 		return null;
+	}
+
+	void PlayFireEffect(Vector3 position, Quaternion rotation)
+	{
+		Instantiate(fireParticle, position, rotation);
 	}
 
 	void PlayShootSound()

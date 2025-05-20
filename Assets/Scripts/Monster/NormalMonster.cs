@@ -17,7 +17,7 @@ public class NormalMonster : Monster, IDamagable
 
 	[Header("Config NavMesh")]
 	private NavMeshAgent navAgent;
-	[SerializeField] private Transform targetTransform;
+	[SerializeField] public Transform targetTransform;
 
 	// GetComponent를 사용하지 않고 IDamagable을 반환받기
 	public static Dictionary<Transform, IDamagable> MonsterDic = new Dictionary<Transform, IDamagable>();
@@ -83,8 +83,8 @@ public class NormalMonster : Monster, IDamagable
 		Debug.Log($"체력감소 : {CurrentHp.Value}");
 
 		// 플레이어 추격
-		targetTransform = attacker;
-		Debug.Log($"추격 대상 변경 : {attacker.name}");
+		//targetTransform = attacker;
+		//Debug.Log($"추격 대상 변경 : {attacker.name}");
 
 		// 체력 0 이하면 Dead
 		if (CurrentHp.Value <= 0)
