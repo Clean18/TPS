@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour, IDamagable
 		}
 		if (Input.GetKey(KeyCode.Alpha2))
 		{
-			RecoveryHp(1);
+			Recover(1);
 		}
 	}
 
@@ -153,7 +153,7 @@ public class PlayerController : MonoBehaviour, IDamagable
 
 	}
 
-	public void RecoveryHp(int healAmount)
+	public void Recover(int healAmount)
 	{
 		// MaxHp을 초과하지 않도록 회복
 		int hp = status.CurrentHp.Value + healAmount;

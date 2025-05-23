@@ -72,3 +72,8 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 /Assets/SciFiWarriorPBRHPPolyart
 /Assets/Imports
+/2DLearn/Assets/Animation
+/2DLearn/Assets/SampleTileset
+/2DLearn/Assets/Sprites/CharacterPack-Version1
+/2DLearn/Assets/Sprites
+/2DLearn/Library/Artifacts

@@ -67,7 +67,7 @@ public class Gun : MonoBehaviour
 		target.TakeDamage(shootDamage, transform.parent.transform);
 
 		// MonoBehaviour로 변환
-		if (target is MonoBehaviour mb)
+		if (target is NormalMonster mb)
 		{
 			//GameObject gameObject = mb.gameObject;
 			mb.targetTransform = transform.parent.transform;

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 060bcab8b5dd78547b2c3ab21b0d7b75, type: 3}
+  m_Name: NormalHpPotion
+  m_EditorClassIdentifier: 
+  Name: "\uC77C\uBC18 HP \uD3EC\uC158"
+  Description: "\uC77C\uBC18 HP \uD3EC\uC158\uC774\uB2E4"
+  Icon: {fileID: 0}
+  Prefab: {fileID: 6515034685065008242, guid: 1adfaa5ccf5131245b75e171ccac809e, type: 3}
+  Value: 30
